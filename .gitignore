@@ -1,3 +1,4 @@
 node_modules
 package-lock.json
 basic_server.txt
+server_only_node.txt

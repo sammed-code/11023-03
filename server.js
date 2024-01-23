@@ -1,69 +1,18 @@
-const { error } = require("console");
-const http = require("http");
+const express = require('express');
+
+// initialisation
+const app = express();
+app.use(express.json()); // application will now use only json format
 
 const port = 8081;
 
 const toDoList = ["Hey Everyone", "Hope U All", "Are Doing", "Awesome At Your Work"];
 
-http.createServer((req, res) => {
-    const {method, url} = req;
+// http://localhost:8081/todos
+app.get("/todos", (req, res) => {
+    res.status(200).send(toDoList);
+})
 
-    if (url === "/todos") {
-        if (method === "GET") {
-            res.writeHead(200, {"Content-Type": "text/html"});
-            console.log("TODOS");
-            res.write(toDoList.toString());
-        }
-        else if (method === "POST") {
-            let body = "";
-            req.on('error', (err) => {
-                console.log(err);
-            }).on('data', (chunk) => {
-                body += chunk;
-                console.log("chunk: ", chunk);
-            }).on('end', () => {
-                body = JSON.parse(body);
-                console.log("data: ", body);
-                let newToDo = toDoList;
-                newToDo.push(body.item)
-            })
-        }
-        else if (method === "PUT") {
-            
-        }
-        else if (method === "DELETE") {
-            let body = "";
-            req.on('error', (err) => {
-                console.log(err);
-            }).on('data', (chunk) => {
-                body += chunk;
-            }).on('end', () => {
-                body = JSON.parse(body);
-                let delThis = body.item;
-
-                // for (let i = 0; i < toDoList.length; i++) {
-                //     if (toDoList[i] === delThis) {
-                //         toDoList.splice(i, 1);
-                //         break;
-                //     }
-                // }
-
-                toDoList.find((elem, i) => {
-                    if (elem === delThis) {
-                        toDoList.splice(i, 1);
-                    }
-                })
-            })
-        }
-        else {
-            res.writeHead(501);
-        }
-    }
-    else if (url === "/") {
-        
-    }
-
-    res.end();
-}).listen(port, () => {
-    console.log(`NodeJS server started running on port ${port}`);
+app.listen(port, () => {
+    console.log(`NodeJS with Express started successfully on port ${port}`);
 })
